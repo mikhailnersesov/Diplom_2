@@ -18,9 +18,9 @@ import static org.hamcrest.Matchers.is;
 @RunWith(Parameterized.class)
 public class UserCreationTests {
     protected static UserSteps userSteps;
-    static String email = "test-data@yandex" + RandomStringUtils.randomAlphabetic(5) + ".ru";
-    static String password = RandomStringUtils.randomAlphabetic(10);
-    static String name = RandomStringUtils.randomAlphabetic(10);
+    String email = "test-data@yandex" + RandomStringUtils.randomAlphabetic(5) + ".ru";
+    String password = RandomStringUtils.randomAlphabetic(10);
+    String name = RandomStringUtils.randomAlphabetic(10);
     @AfterClass
     public static void tearDown() {
 //TODO add deletion of the user
@@ -53,22 +53,22 @@ public class UserCreationTests {
                 .body("success", is(false));
     }
     @Parameterized.Parameter(0)
-    public String emailParam;
+    static public String emailParam = "test-data@yandex" + RandomStringUtils.randomAlphabetic(5) + ".ru";
     @Parameterized.Parameter(1)
-    public String passwordParam;
+    static public String passwordParam = RandomStringUtils.randomAlphabetic(10);
     @Parameterized.Parameter(2)
-    public String nameParam;
+    static public String nameParam = RandomStringUtils.randomAlphabetic(10);
 
     @Parameterized.Parameters
     public static Object[][] data() {
         return new Object[][]{
-                {"",password, name},
-                {email,"", name},
-                {email,password, ""}, //TODO try with null?
+                {"",passwordParam, nameParam},
+                {emailParam,"", nameParam},
+                {emailParam,passwordParam, ""}, //TODO try with null?
         };
     }
     @Test
-    @DisplayName("Ошибка при создании пользователя, без одного из обяхательных полей")
+    @DisplayName("Ошибка при создании пользователя, без одного из обязательных полей")
     @Description("Данный тест покрывает следующие кейсы: 2) нельзя создать двух одинаковых пользователей; 4) запрос возвращает правильный код ответа(403 Forbidden)")
     public void createUserWithoutMandatoryParameterFailed() {
 
