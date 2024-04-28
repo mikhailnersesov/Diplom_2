@@ -11,12 +11,12 @@ public class UserSteps {
     public UserSteps(UserClient userClient) {
         this.userClient = userClient;
     }
-    @Step("Создание пользователя")
+    @Step("Создание уникального пользователя")
     public ValidatableResponse createUserRequest(String email, String password, String name) {
         UserCreateRequest userCreateRequest = new UserCreateRequest();
         userCreateRequest.setEmail(email);
         userCreateRequest.setPassword(password);
         userCreateRequest.setName(name);
-        return userClient.sendPostRequestUserRegister(userCreateRequest).then().log().all();
+        return userClient.sendPostRequestUserRegister(userCreateRequest).then();
     }
 }
