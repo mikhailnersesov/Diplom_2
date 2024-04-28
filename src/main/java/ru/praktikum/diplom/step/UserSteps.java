@@ -17,6 +17,6 @@ public class UserSteps {
         userCreateRequest.setEmail(email);
         userCreateRequest.setPassword(password);
         userCreateRequest.setName(name);
-        return userClient.sendPostRequestUserRegister(userCreateRequest).then();
+        return userClient.sendPostRequestUserRegister(userCreateRequest).then().log().all();
     }
 }

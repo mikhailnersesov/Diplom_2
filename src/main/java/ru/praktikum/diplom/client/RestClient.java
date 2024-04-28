@@ -10,6 +10,6 @@ public abstract class RestClient {
     protected RequestSpecification getdefaultRequestSpecification() {
         return given()
                 .baseUri(BASE_URI)
-                .contentType(ContentType.JSON);
+                .contentType(ContentType.JSON).log().all();
     }
 }
