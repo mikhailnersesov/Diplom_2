@@ -2,6 +2,7 @@ package ru.praktikum.diplom.client;
 
 import io.restassured.http.ContentType;
 import io.restassured.specification.RequestSpecification;
+import ru.praktikum.diplom.dto.UserDeleteRequest;
 
 import static io.restassured.RestAssured.given;
 import static ru.praktikum.diplom.config.RestConfig.BASE_URI;

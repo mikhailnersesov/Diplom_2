@@ -18,13 +18,11 @@ import java.util.List;
 import static org.apache.http.HttpStatus.*;
 import static org.hamcrest.Matchers.is;
 
-public class UserCreationTests {
+@RunWith(Parameterized.class)
+public class UserCreationParamTests {
     protected static List<String> userTokens = new ArrayList();
     protected String userToken;
     protected static UserSteps userSteps;
-    String email = "test-data@yandex" + RandomStringUtils.randomAlphabetic(5) + ".ru";
-    String password = RandomStringUtils.randomAlphabetic(10);
-    String name = RandomStringUtils.randomAlphabetic(10);
 
     @AfterClass
     public static void tearDown() {
@@ -43,7 +41,7 @@ public class UserCreationTests {
     @After
     public void getUserIdIfWasSuccessfullyCreated() {
         try {
-            String accessToken = userSteps.loginUserRequest(email, password).log().all().statusCode(SC_OK).log().all().extract().path("accessToken");
+            String accessToken = userSteps.loginUserRequest(emailParam, passwordParam).statusCode(SC_OK).extract().path("accessToken");
             int spaceIndex = accessToken.indexOf(" "); // Find the index of the space character
             userToken = accessToken.substring(spaceIndex + 1);  // Extract the second part of the string using substring
         } catch (AssertionError assertionError) {
@@ -52,24 +50,29 @@ public class UserCreationTests {
         userTokens.add(userToken);
     }
 
-    @Test
-    @DisplayName("Успешное создание уникального пользователя с корректными данными")
-    @Description("Данный тест покрывает следующие кейсы: 1) пользователя можно создать; 3) чтобы создать пользователя, нужно передать в ручку все обязательные поля; 4) запрос возвращает правильный код ответа (201 Created); 5) успешный запрос возвращает success: true")
-    public void createUserSucessfully() {
-        userSteps
-                .createUserRequest(email, password, name)
-                .statusCode(SC_OK) //BUG: STEBURG-1: should be not 200, but 201 created
-                .body("success", is(true));
+    @Parameterized.Parameter(0)
+    static public String emailParam = "test-data@yandex" + RandomStringUtils.randomAlphabetic(5) + ".ru";
+    @Parameterized.Parameter(1)
+    static public String passwordParam = RandomStringUtils.randomAlphabetic(10);
+    @Parameterized.Parameter(2)
+    static public String nameParam = RandomStringUtils.randomAlphabetic(10);
+
+    @Parameterized.Parameters
+    public static Object[][] data() {
+        return new Object[][]{
+                {"", passwordParam, nameParam},
+                {emailParam, "", nameParam},
+                {emailParam, passwordParam, ""}, //TODO try with null?
+        };
     }
 
     @Test
-    @DisplayName("Ошибка при создании пользователя, который уже существует")
+    @DisplayName("Ошибка при создании пользователя, без одного из обязательных полей")
     @Description("Данный тест покрывает следующие кейсы: 2) нельзя создать двух одинаковых пользователей; 4) запрос возвращает правильный код ответа(403 Forbidden)")
-    public void createSecondSameUserFailed() {
+    public void createUserWithoutMandatoryParameterFailed() {
+
         userSteps
-                .createUserRequest(email, password, name);
-        userSteps
-                .createUserRequest(email, password, name)
+                .createUserRequest(emailParam, passwordParam, nameParam)
                 .statusCode(SC_FORBIDDEN)
                 .body("success", is(false));
     }
