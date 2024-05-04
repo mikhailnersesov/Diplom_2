@@ -4,6 +4,7 @@ import io.qameta.allure.Step;
 import io.restassured.response.ValidatableResponse;
 import ru.praktikum.diplom.client.UserClient;
 import ru.praktikum.diplom.dto.UserCreateRequest;
+import ru.praktikum.diplom.dto.UserDataChangeRequest;
 import ru.praktikum.diplom.dto.UserDeleteRequest;
 import ru.praktikum.diplom.dto.UserLoginRequest;
 
@@ -27,8 +28,16 @@ public class UserSteps {
         userLoginRequest.setEmail(email);
         userLoginRequest.setPassword(password);
         return userClient.sendPostRequestUserLogin(userLoginRequest).then();
-    }@Step("Удаление пользователя")
+    }
+    @Step("Удаление пользователя")
     public ValidatableResponse deleteUserRequest(String accessToken) {
         return userClient.sendDeleteRequestUserDeletion(accessToken).then();
+    }
+    @Step("Изменение данных пользователя")
+    public ValidatableResponse getUserDataRequest(String email, String name, String accessToken) {
+        UserDataChangeRequest userDataChangeRequest = new UserDataChangeRequest();
+        userDataChangeRequest.setEmail(email);
+        userDataChangeRequest.setName(name);
+        return userClient.sendPatchRequestGetUserData(userDataChangeRequest,accessToken).then();
     }
 }

@@ -3,6 +3,7 @@ package ru.praktikum.diplom.client;
 import io.qameta.allure.Step;
 import io.restassured.response.Response;
 import ru.praktikum.diplom.dto.UserCreateRequest;
+import ru.praktikum.diplom.dto.UserDataChangeRequest;
 import ru.praktikum.diplom.dto.UserDeleteRequest;
 import ru.praktikum.diplom.dto.UserLoginRequest;
 
@@ -26,5 +27,12 @@ public class UserClient extends RestClient {
         return getdefaultRequestSpecification().auth().oauth2(accessToken)
                 .when()
                 .delete("/auth/user");
+    }
+    @Step("Send PATCH request to /auth/user")
+    public Response sendPatchRequestGetUserData(UserDataChangeRequest userDataChangeRequest, String accessToken) {
+        return getdefaultRequestSpecification().auth().oauth2(accessToken)
+                .body(userDataChangeRequest)
+                .when()
+                .patch("/auth/user");
     }
 }
