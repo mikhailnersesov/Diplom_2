@@ -49,21 +49,21 @@ public class UserChangeDataTests {
     @Test
     @DisplayName("Успешный изменение почты пользователя с авторизацией")
     @Description("Данный тест покрывает следующие кейсы: 1) пройдя авторизацию - можно успешно изменить почту для пользователя")
-    public void changeUserDataEmailWithAuthorizationSucessfully() {
+    public void test_2_changeUserDataEmailWithAuthorizationSucessfully() {
         String newEmail = "test-data@yandex" + RandomStringUtils.randomAlphabetic(5) + ".ru";
-        userSteps.getUserDataRequest(newEmail, name, userTokens.get(0)).statusCode(SC_OK).body("success", is(true)).and().body("user.email",equalToIgnoringCase(newEmail)).and().body("user.name",equalToIgnoringCase(name));
+        userSteps.getUserDataRequest(newEmail, name, userTokens.get(0)).statusCode(SC_OK).body("success", is(true)).and().body("user.email",equalToIgnoringCase(newEmail)).and().body("user.name",equalToIgnoringCase(name)).log().all();
     }
     @Test
     @DisplayName("Успешный изменение имени пользователя с авторизацией")
     @Description("Данный тест покрывает следующие кейсы: 1) пройдя авторизацию - можно успешно изменить пароль для пользователя")
-    public void changeUserDataNameWithAuthorizationSucessfully() {
+    public void test_1_changeUserDataNameWithAuthorizationSucessfully() {
         String newName = RandomStringUtils.randomAlphabetic(10);
-        userSteps.getUserDataRequest(email, newName, userTokens.get(0)).statusCode(SC_OK).body("success", is(true)).and().body("user.email",equalToIgnoringCase(email)).and().body("user.name",equalToIgnoringCase(newName));
+        userSteps.getUserDataRequest(email, newName, userTokens.get(0)).statusCode(SC_OK).body("success", is(true)).and().body("user.email",equalToIgnoringCase(email)).and().body("user.name",equalToIgnoringCase(newName)); //BUG: STEBURG-2: should be 200, but is 403
     }
     @Test
     @DisplayName("Успешный изменение всех данных пользователя (почта и имя) с авторизацией")
     @Description("Данный тест покрывает следующие кейсы: 1) пройдя авторизацию - можно успешно изменить сразу и почту и пароль для пользователя")
-    public void changeUserDataBothWithAuthorizationSucessfully() {
+    public void test_3_changeUserDataBothWithAuthorizationSucessfully() {
         String newEmail = "test-data@yandex" + RandomStringUtils.randomAlphabetic(5) + ".ru";
         String newName = RandomStringUtils.randomAlphabetic(10);
         userSteps.getUserDataRequest(newEmail, newName, userTokens.get(0)).statusCode(SC_OK).body("success", is(true)).and().body("user.email",equalToIgnoringCase(newEmail)).and().body("user.name",equalToIgnoringCase(newName));
@@ -72,7 +72,7 @@ public class UserChangeDataTests {
     @Test
     @DisplayName("Ошибка при попытке изменить данные пользователя без авторизации")
     @Description("Данный тест покрывает следующие кейсы: 1) при попытке изменить данные пользователя без авторизации - будет получена ошибка")
-    public void changeUserDataWithoutAuthorizationFailed() {
+    public void test_4_changeUserDataWithoutAuthorizationFailed() {
         String newEmail = "test-data@yandex" + RandomStringUtils.randomAlphabetic(5) + ".ru";
         String newPassword = RandomStringUtils.randomAlphabetic(10);
         userSteps.getUserDataRequest(newEmail, newPassword, "").statusCode(SC_UNAUTHORIZED).body("success", is(false)).and().body("message",is("You should be authorised"));

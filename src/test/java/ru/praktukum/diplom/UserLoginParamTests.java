@@ -50,7 +50,7 @@ public class UserLoginParamTests {
     @Parameterized.Parameter(1)
     static public String passwordParam = RandomStringUtils.randomAlphabetic(10);
 
-    @Parameterized.Parameters
+    @Parameterized.Parameters(name = "{index} - email {0}, password {1}")
     public static Object[][] data() {
         return new Object[][]{
                 {"test-data@yandex.ru", password},
