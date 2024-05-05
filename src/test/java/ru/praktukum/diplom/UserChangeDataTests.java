@@ -51,7 +51,7 @@ public class UserChangeDataTests {
     @Description("Данный тест покрывает следующие кейсы: 1) пройдя авторизацию - можно успешно изменить почту для пользователя")
     public void test_2_changeUserDataEmailWithAuthorizationSucessfully() {
         String newEmail = "test-data@yandex" + RandomStringUtils.randomAlphabetic(5) + ".ru";
-        userSteps.getUserDataRequest(newEmail, name, userTokens.get(0)).statusCode(SC_OK).body("success", is(true)).and().body("user.email",equalToIgnoringCase(newEmail)).and().body("user.name",equalToIgnoringCase(name)).log().all();
+        userSteps.getUserDataRequest(newEmail, name, userTokens.get(0)).statusCode(SC_OK).body("success", is(true)).and().body("user.email",equalToIgnoringCase(newEmail)).and().body("user.name",equalToIgnoringCase(name));
     }
     @Test
     @DisplayName("Успешный изменение имени пользователя с авторизацией")

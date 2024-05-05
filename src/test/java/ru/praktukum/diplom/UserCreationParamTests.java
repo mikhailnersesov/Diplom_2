@@ -28,7 +28,7 @@ public class UserCreationParamTests {
     public static void tearDown() {
         for (int i = 0; i < userTokens.size(); i++) {
             if (userTokens.get(i) != null) {
-                userSteps.deleteUserRequest(userTokens.get(i)).log().all().statusCode(SC_ACCEPTED).body("message", is("User successfully removed")).log().all();
+                userSteps.deleteUserRequest(userTokens.get(i)).statusCode(SC_ACCEPTED).body("message", is("User successfully removed"));
             }
         }
     }

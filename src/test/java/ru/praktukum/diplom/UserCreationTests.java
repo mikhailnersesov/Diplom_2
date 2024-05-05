@@ -30,7 +30,7 @@ public class UserCreationTests {
     public static void tearDown() {
         for (int i = 0; i < userTokens.size(); i++) {
             if (userTokens.get(i) != null) {
-                userSteps.deleteUserRequest(userTokens.get(i)).log().all().statusCode(SC_ACCEPTED).body("message", is("User successfully removed")).log().all();
+                userSteps.deleteUserRequest(userTokens.get(i)).statusCode(SC_ACCEPTED).body("message", is("User successfully removed"));
             }
         }
     }
@@ -43,7 +43,7 @@ public class UserCreationTests {
     @After
     public void getUserIdIfWasSuccessfullyCreated() {
         try {
-            String accessToken = userSteps.loginUserRequest(email, password).log().all().statusCode(SC_OK).log().all().extract().path("accessToken");
+            String accessToken = userSteps.loginUserRequest(email, password).statusCode(SC_OK).extract().path("accessToken");
             int spaceIndex = accessToken.indexOf(" "); // Find the index of the space character
             userToken = accessToken.substring(spaceIndex + 1);  // Extract the second part of the string using substring
         } catch (AssertionError assertionError) {

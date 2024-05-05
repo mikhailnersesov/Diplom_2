@@ -69,7 +69,7 @@ public class OrderCreationTests {
     public void createOrderWithIngedientsAuthorizedSucessfully() {
         userToken = getUserToken();
 
-        ArrayList<String> ingredients = orderSteps.getIngredientsRequest().log().all().extract().path("data[0,1]._id");
+        ArrayList<String> ingredients = orderSteps.getIngredientsRequest().extract().path("data[0,1]._id");
         orderSteps.createOrdersRequest(ingredients, userToken).statusCode(SC_OK).body("success", is(true)).and().body("name", is("Бессмертный флюоресцентный бургер"));
     }
 
@@ -77,7 +77,7 @@ public class OrderCreationTests {
     @DisplayName("Ошибка при создание заказа без авторизации c игридиентами")
     @Description("Данный тест покрывает следующие кейсы: 1) можно создать заказ с валидными ингридиентами и без авторизации")
     public void createOrderWithIngedientsNotAuthorizedFailed() {
-        ArrayList<String> ingredients = orderSteps.getIngredientsRequest().log().all().extract().path("data[0,1]._id");
+        ArrayList<String> ingredients = orderSteps.getIngredientsRequest().extract().path("data[0,1]._id");
         orderSteps.createOrdersRequest(ingredients).body("success", is(false)); //BUG: STEBURG-2: "success" state should be "false", but is "true"
     }
 
@@ -86,7 +86,7 @@ public class OrderCreationTests {
     @Description("Данный тест покрывает следующие кейсы: 1) можно создать заказ с ингридиентами и без авторизации")
     public void createOrderWithoutIngedientsNotAuthorizedFailed400() {
         ArrayList<String> ingredients = new ArrayList<>();
-        orderSteps.createOrdersRequest(ingredients).log().all().statusCode(SC_BAD_REQUEST).body("success", is(false)).and().body("message", is("Ingredient ids must be provided"));
+        orderSteps.createOrdersRequest(ingredients).statusCode(SC_BAD_REQUEST).body("success", is(false)).and().body("message", is("Ingredient ids must be provided"));
     }
 
     @Test
@@ -96,7 +96,7 @@ public class OrderCreationTests {
         userToken = getUserToken();
 
         ArrayList<String> ingredients = new ArrayList<>();
-        orderSteps.createOrdersRequest(ingredients, userToken).log().all().statusCode(SC_BAD_REQUEST).body("success", is(false)).and().body("message", is("Ingredient ids must be provided"));
+        orderSteps.createOrdersRequest(ingredients, userToken).statusCode(SC_BAD_REQUEST).body("success", is(false)).and().body("message", is("Ingredient ids must be provided"));
     }
 
     @Test
@@ -106,7 +106,7 @@ public class OrderCreationTests {
         ArrayList<String> ingredients = new ArrayList<>();
         ingredients.add("aaaa");
         ingredients.add("bbb");
-        orderSteps.createOrdersRequest(ingredients).log().all().statusCode(SC_INTERNAL_SERVER_ERROR);
+        orderSteps.createOrdersRequest(ingredients).statusCode(SC_INTERNAL_SERVER_ERROR);
     }
 
     @Test
@@ -118,7 +118,7 @@ public class OrderCreationTests {
         ArrayList<String> ingredients = new ArrayList<>();
         ingredients.add("aaaa");
         ingredients.add("bbb");
-        orderSteps.createOrdersRequest(ingredients, userToken).log().all().statusCode(SC_INTERNAL_SERVER_ERROR);
+        orderSteps.createOrdersRequest(ingredients, userToken).statusCode(SC_INTERNAL_SERVER_ERROR);
     }
 
     @Test
