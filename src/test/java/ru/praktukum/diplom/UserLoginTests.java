@@ -38,7 +38,7 @@ public class UserLoginTests {
         userSteps = new UserSteps(new UserClient());
         userSteps
                 .createUserRequest(email, password, name)
-                .statusCode(SC_OK) //BUG: STEBURG-1: should be not 200, but 201 created
+                .statusCode(SC_OK)
                 .body("success", is(true));
 
     }

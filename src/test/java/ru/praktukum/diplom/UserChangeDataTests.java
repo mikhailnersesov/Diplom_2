@@ -38,7 +38,7 @@ public class UserChangeDataTests {
         userSteps = new UserSteps(new UserClient());
         userSteps
                 .createUserRequest(email, password, name)
-                .statusCode(SC_OK) //BUG: STEBURG-1: should be not 200, but 201 created
+                .statusCode(SC_OK)
                 .body("success", is(true));
         String accessToken = userSteps.loginUserRequest(email, password).statusCode(SC_OK).extract().path("accessToken");
         int spaceIndex = accessToken.indexOf(" "); // Find the index of the space character
@@ -58,7 +58,7 @@ public class UserChangeDataTests {
     @Description("Данный тест покрывает следующие кейсы: 1) пройдя авторизацию - можно успешно изменить пароль для пользователя")
     public void test_1_changeUserDataNameWithAuthorizationSucessfully() {
         String newName = RandomStringUtils.randomAlphabetic(10);
-        userSteps.getUserDataRequest(email, newName, userTokens.get(0)).statusCode(SC_OK).body("success", is(true)).and().body("user.email",equalToIgnoringCase(email)).and().body("user.name",equalToIgnoringCase(newName)); //BUG: STEBURG-2: should be 200, but is 403
+        userSteps.getUserDataRequest(email, newName, userTokens.get(0)).statusCode(SC_OK).body("success", is(true)).and().body("user.email",equalToIgnoringCase(email)).and().body("user.name",equalToIgnoringCase(newName));
     }
     @Test
     @DisplayName("Успешный изменение всех данных пользователя (почта и имя) с авторизацией")

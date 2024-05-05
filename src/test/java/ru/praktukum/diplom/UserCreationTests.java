@@ -58,7 +58,7 @@ public class UserCreationTests {
     public void createUserSucessfully() {
         userSteps
                 .createUserRequest(email, password, name)
-                .statusCode(SC_OK) //BUG: STEBURG-1: should be not 200, but 201 created
+                .statusCode(SC_OK) //BUG: STEBURG-1: actually is a bug in RQ: creation should be not 200, but "201 created"
                 .body("success", is(true));
     }
 

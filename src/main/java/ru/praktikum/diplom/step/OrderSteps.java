@@ -31,4 +31,8 @@ public class OrderSteps {
         ordersIngredientsRequest.setIngredients(ingredients);
         return ordersClient.sendPostRequestOrdersCreate(ordersIngredientsRequest,userToken).then();
     }
+    @Step("Получить заказы конкретного пользователя")
+    public ValidatableResponse getOrdersRequest(String userToken) {
+        return ordersClient.sendGetRequestOrders(userToken).then();
+    }
 }

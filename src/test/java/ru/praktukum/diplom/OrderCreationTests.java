@@ -58,13 +58,6 @@ public class OrderCreationTests {
     }
 
     @Test
-    @DisplayName("Ошибка при создание заказа без авторизации c игридиентами")
-    @Description("Данный тест покрывает следующие кейсы: 1) можно создать заказ с валидными ингридиентами и без авторизации")
-    public void createOrderWithIngedientsWithoutAuthorizationFailed() {
-        ArrayList<String> ingredients = orderSteps.getIngredientsRequest().log().all().extract().path("data[0,1]._id");
-        orderSteps.createOrdersRequest(ingredients).body("success", is(false)); //TODO BUG
-    }
-    @Test
     @DisplayName("Успешное создание заказа с авторизацией и c игридиентами")
     @Description("Данный тест покрывает следующие кейсы: 1) можно создать заказ с валидными ингридиентами и без авторизации")
     public void createOrderWithIngedientsWithAuthorizationSucessfully() {
@@ -75,6 +68,14 @@ public class OrderCreationTests {
         ArrayList<String> ingredients = orderSteps.getIngredientsRequest().log().all().extract().path("data[0,1]._id");
         orderSteps.createOrdersRequest(ingredients,userToken).statusCode(SC_OK).body("success", is(true)).and().body("name", is("Бессмертный флюоресцентный бургер"));
     }
+    @Test
+    @DisplayName("Ошибка при создание заказа без авторизации c игридиентами")
+    @Description("Данный тест покрывает следующие кейсы: 1) можно создать заказ с валидными ингридиентами и без авторизации")
+    public void createOrderWithIngedientsWithoutAuthorizationFailed() {
+        ArrayList<String> ingredients = orderSteps.getIngredientsRequest().log().all().extract().path("data[0,1]._id");
+        orderSteps.createOrdersRequest(ingredients).body("success", is(false)); //BUG: STEBURG-2: "success" state should be "false", but is "true"
+    }
+
     @Test
     @DisplayName("Ошибка при создание заказа без авторизации и без ингридиентов")
     @Description("Данный тест покрывает следующие кейсы: 1) можно создать заказ с ингридиентами и без авторизации")

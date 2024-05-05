@@ -13,6 +13,12 @@ public class OrdersClient extends RestClient {
                 .when()
                 .post("/orders");
     }
+    @Step("Send GET request to /orders")
+    public Response sendGetRequestOrders(String accessToken) {
+        return getdefaultRequestSpecification().auth().oauth2(accessToken)
+                .when()
+                .get("/orders");
+    }
 
     @Step("Send GET request to /ingredients")
     public Response sendGetRequestIngredients() {
