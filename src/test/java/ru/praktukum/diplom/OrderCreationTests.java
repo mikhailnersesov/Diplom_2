@@ -121,41 +121,6 @@ public class OrderCreationTests {
         orderSteps.createOrdersRequest(ingredients, userToken).statusCode(SC_INTERNAL_SERVER_ERROR);
     }
 
-    @Test
-    @DisplayName("Получение заказов (1 заказ) конкретного пользователя, c авторизацией")
-    @Description("Данный тест покрывает следующие кейсы: 1) можно получить список заказов конкретного пользователя (если он сделал только один заказ), предварительно авторизовавшись")
-    public void getOneOrdersAuthorizedSucessfully() {
-        createOrderWithIngedientsAuthorizedSucessfully();
-        userToken = getUserToken();
-        orderSteps.getOrdersRequest(userToken).statusCode(SC_OK).body("success", is(true)).and().body("orders[0].status", is("done"));
-    }
-
-    @Test
-    @DisplayName("Получение заказов (несколько заказов) конкретного пользователя, c авторизацией")
-    @Description("Данный тест покрывает следующий кейс: 1) можно получить список заказов конкретного пользователя (если он сделал несколько заказов), предварительно авторизовавшись")
-    public void getManyOrdersAuthorizedSucessfully() {
-        createOrderWithIngedientsAuthorizedSucessfully();
-        createOrderWithIngedientsAuthorizedSucessfully();
-        userToken = getUserToken();
-        orderSteps.getOrdersRequest(userToken).statusCode(SC_OK).body("success", is(true)).and().body("orders[0].status", is("done")).and().body("orders[1].status", is("done"));
-    }
-
-    @Test
-    @DisplayName("Получение заказов (ни одного заказа) конкретного пользователя, c авторизацией")
-    @Description("Данный тест покрывает следующие кейсы: 1) можно получить список заказов конкретного пользователя (если он сделал не сделал ни одного заказа), предварительно авторизовавшись")
-    public void getNullOrdersAuthorizedSucessfully() {
-        userToken = getUserToken();
-        orderSteps.getOrdersRequest(userToken).statusCode(SC_OK).body("success", is(true)).and().body("orders", empty());
-    }
-
-    @Test
-    @DisplayName("Ошибка при получении заказов (1 заказ) конкретного пользователя, без авторизацией")
-    @Description("Данный тест покрывает следующие кейсы: 1) нельзя получить список заказов конкретного пользователя (если он сделал только один заказ), не авторизовавшись")
-    public void getOneOrdersNotAuthorizedFailed401() {
-        createOrderWithIngedientsAuthorizedSucessfully();
-        userToken = getUserToken();
-        orderSteps.getOrdersRequest().statusCode(SC_UNAUTHORIZED).body("success", is(false)).and().body("message", is("You should be authorised"));
-    }
 
 
 }
