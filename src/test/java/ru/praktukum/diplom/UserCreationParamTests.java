@@ -26,9 +26,9 @@ public class UserCreationParamTests {
 
     @AfterClass
     public static void tearDown() {
-        for (int i = 0; i < userTokens.size(); i++) {
-            if (userTokens.get(i) != null) {
-                userSteps.deleteUserRequest(userTokens.get(i)).statusCode(SC_ACCEPTED).body("message", is("User successfully removed"));
+        for (String token : userTokens) {
+            if (token != null) {
+                userSteps.deleteUserRequest(token).statusCode(SC_ACCEPTED).body("message", is("User successfully removed"));
             }
         }
     }
@@ -57,18 +57,21 @@ public class UserCreationParamTests {
     @Parameterized.Parameter(2)
     static public String nameParam = RandomStringUtils.randomAlphabetic(10);
 
-    @Parameterized.Parameters
+    @Parameterized.Parameters(name = "{index} - email {0}, password {1}, name {2}")
     public static Object[][] data() {
         return new Object[][]{
                 {"", passwordParam, nameParam},
+                {null, passwordParam, nameParam},
                 {emailParam, "", nameParam},
-                {emailParam, passwordParam, ""}, //TODO try with null?
+                {emailParam, null, nameParam},
+                {emailParam, passwordParam, ""},
+                {emailParam, passwordParam, null}
         };
     }
 
     @Test
     @DisplayName("Ошибка при создании пользователя, без одного из обязательных полей")
-    @Description("Данный тест покрывает следующие кейсы: 2) нельзя создать двух одинаковых пользователей; 4) запрос возвращает правильный код ответа(403 Forbidden)")
+    @Description("Данный тест покрывает следующие кейсы: 1) нельзя создать пользователя без одного из обязательных полей; 2) запрос возвращает правильный код ответа(403 Forbidden); 3) успешный запрос возвращает success: false")
     public void createUserWithoutMandatoryParameterFailed() {
 
         userSteps

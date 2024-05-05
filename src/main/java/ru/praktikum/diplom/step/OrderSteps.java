@@ -2,7 +2,6 @@ package ru.praktikum.diplom.step;
 
 import io.qameta.allure.Step;
 import io.restassured.response.ValidatableResponse;
-import org.json.JSONArray;
 import ru.praktikum.diplom.client.OrdersClient;
 import ru.praktikum.diplom.dto.OrdersIngredientsRequest;
 

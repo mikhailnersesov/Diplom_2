@@ -45,7 +45,7 @@ public class UserLoginTests {
 
     @Test
     @DisplayName("Успешный логин уникального пользователя с корректными данными")
-    @Description("Данный тест покрывает следующие кейсы: 1) пользователя можно создать; 3) чтобы создать пользователя, нужно передать в ручку все обязательные поля; 4) запрос возвращает правильный код ответа (201 Created); 5) успешный запрос возвращает success: true")
+    @Description("Данный тест покрывает следующие кейсы: 1) пользователя можно создать; 2) чтобы создать пользователя, нужно передать в ручку все обязательные поля; 3) запрос возвращает правильный код ответа (201 Created); 4) успешный запрос возвращает success: true")
     public void loginUserSucessfully() {
         String accessToken = userSteps.loginUserRequest(email, password).statusCode(SC_OK).extract().path("accessToken");
         int spaceIndex = accessToken.indexOf(" "); // Find the index of the space character

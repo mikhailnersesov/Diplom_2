@@ -28,9 +28,9 @@ public class UserCreationTests {
 
     @AfterClass
     public static void tearDown() {
-        for (int i = 0; i < userTokens.size(); i++) {
-            if (userTokens.get(i) != null) {
-                userSteps.deleteUserRequest(userTokens.get(i)).statusCode(SC_ACCEPTED).body("message", is("User successfully removed"));
+        for (String token : userTokens) {
+            if (token != null) {
+                userSteps.deleteUserRequest(token).statusCode(SC_ACCEPTED).body("message", is("User successfully removed"));
             }
         }
     }
@@ -54,7 +54,7 @@ public class UserCreationTests {
 
     @Test
     @DisplayName("Успешное создание уникального пользователя с корректными данными")
-    @Description("Данный тест покрывает следующие кейсы: 1) пользователя можно создать; 3) чтобы создать пользователя, нужно передать в ручку все обязательные поля; 4) запрос возвращает правильный код ответа (201 Created); 5) успешный запрос возвращает success: true")
+    @Description("Данный тест покрывает следующие кейсы: 1) пользователя можно создать; 2) чтобы создать пользователя, нужно передать в ручку все обязательные поля; 3) запрос возвращает правильный код ответа (201 Created); 4) успешный запрос возвращает success: true")
     public void createUserSucessfully() {
         userSteps
                 .createUserRequest(email, password, name)
@@ -64,7 +64,7 @@ public class UserCreationTests {
 
     @Test
     @DisplayName("Ошибка при создании пользователя, который уже существует")
-    @Description("Данный тест покрывает следующие кейсы: 2) нельзя создать двух одинаковых пользователей; 4) запрос возвращает правильный код ответа(403 Forbidden)")
+    @Description("Данный тест покрывает следующие кейсы: 1) нельзя создать двух одинаковых пользователей; 2) запрос возвращает правильный код ответа(403 Forbidden); 3) успешный запрос возвращает success: false")
     public void createSecondSameUserFailed() {
         userSteps
                 .createUserRequest(email, password, name);
