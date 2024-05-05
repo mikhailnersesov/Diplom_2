@@ -16,8 +16,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.apache.http.HttpStatus.*;
+import static org.hamcrest.Matchers.empty;
 import static org.hamcrest.Matchers.is;
-import org.json.JSONArray;
 
 public class OrderCreationTests {
     protected static List<String> userTokens = new ArrayList();
@@ -57,21 +57,26 @@ public class OrderCreationTests {
         userTokens.add(userToken);
     }
 
+    public String getUserToken() {
+        String accessToken = userSteps.loginUserRequest(email, password).statusCode(SC_OK).extract().path("accessToken");
+        int spaceIndex = accessToken.indexOf(" ");
+        return userToken = accessToken.substring(spaceIndex + 1);
+    }
+
     @Test
     @DisplayName("Успешное создание заказа с авторизацией и c игридиентами")
     @Description("Данный тест покрывает следующие кейсы: 1) можно создать заказ с валидными ингридиентами и без авторизации")
-    public void createOrderWithIngedientsWithAuthorizationSucessfully() {
-        String accessToken = userSteps.loginUserRequest(email, password).statusCode(SC_OK).extract().path("accessToken");
-        int spaceIndex = accessToken.indexOf(" ");
-        userToken = accessToken.substring(spaceIndex + 1);
+    public void createOrderWithIngedientsAuthorizedSucessfully() {
+        userToken = getUserToken();
 
         ArrayList<String> ingredients = orderSteps.getIngredientsRequest().log().all().extract().path("data[0,1]._id");
-        orderSteps.createOrdersRequest(ingredients,userToken).statusCode(SC_OK).body("success", is(true)).and().body("name", is("Бессмертный флюоресцентный бургер"));
+        orderSteps.createOrdersRequest(ingredients, userToken).statusCode(SC_OK).body("success", is(true)).and().body("name", is("Бессмертный флюоресцентный бургер"));
     }
+
     @Test
     @DisplayName("Ошибка при создание заказа без авторизации c игридиентами")
     @Description("Данный тест покрывает следующие кейсы: 1) можно создать заказ с валидными ингридиентами и без авторизации")
-    public void createOrderWithIngedientsWithoutAuthorizationFailed() {
+    public void createOrderWithIngedientsNotAuthorizedFailed() {
         ArrayList<String> ingredients = orderSteps.getIngredientsRequest().log().all().extract().path("data[0,1]._id");
         orderSteps.createOrdersRequest(ingredients).body("success", is(false)); //BUG: STEBURG-2: "success" state should be "false", but is "true"
     }
@@ -79,42 +84,78 @@ public class OrderCreationTests {
     @Test
     @DisplayName("Ошибка при создание заказа без авторизации и без ингридиентов")
     @Description("Данный тест покрывает следующие кейсы: 1) можно создать заказ с ингридиентами и без авторизации")
-    public void createOrderWithoutIngedientsWithoutAuthorizationFailed400() {
+    public void createOrderWithoutIngedientsNotAuthorizedFailed400() {
         ArrayList<String> ingredients = new ArrayList<>();
         orderSteps.createOrdersRequest(ingredients).log().all().statusCode(SC_BAD_REQUEST).body("success", is(false)).and().body("message", is("Ingredient ids must be provided"));
     }
+
     @Test
     @DisplayName("Ошибка при создание заказа c авторизацией, но без ингридиентов")
     @Description("Данный тест покрывает следующие кейсы: 1) можно создать заказ с ингридиентами и без авторизации")
-    public void createOrderWithoutIngedientsWithAuthorizationFailed400() {
-        String accessToken = userSteps.loginUserRequest(email, password).statusCode(SC_OK).extract().path("accessToken");
-        int spaceIndex = accessToken.indexOf(" ");
-        userToken = accessToken.substring(spaceIndex + 1);
+    public void createOrderWithoutIngedientsAuthorizedFailed400() {
+        userToken = getUserToken();
 
         ArrayList<String> ingredients = new ArrayList<>();
-        orderSteps.createOrdersRequest(ingredients,userToken).log().all().statusCode(SC_BAD_REQUEST).body("success", is(false)).and().body("message", is("Ingredient ids must be provided"));
+        orderSteps.createOrdersRequest(ingredients, userToken).log().all().statusCode(SC_BAD_REQUEST).body("success", is(false)).and().body("message", is("Ingredient ids must be provided"));
     }
+
     @Test
     @DisplayName("Ошибка при создание заказа без авторизации и с невалидным хешем ингредиента")
     @Description("Данный тест покрывает следующие кейсы: 1) можно создать заказ с ингридиентами и без авторизации")
-    public void createOrderWithInvalidIngredientWithoutAuthorizationFailed500() {
+    public void createOrderWithInvalidIngredientNotAuthorizedFailed500() {
         ArrayList<String> ingredients = new ArrayList<>();
         ingredients.add("aaaa");
         ingredients.add("bbb");
         orderSteps.createOrdersRequest(ingredients).log().all().statusCode(SC_INTERNAL_SERVER_ERROR);
     }
+
     @Test
     @DisplayName("Ошибка при создание заказа с авторизацией, но с невалидным хешем ингредиента")
     @Description("Данный тест покрывает следующие кейсы: 1) можно создать заказ с ингридиентами и без авторизации")
-    public void createOrderWithInvalidIngredientWithAuthorizationFailed500() {
-        String accessToken = userSteps.loginUserRequest(email, password).statusCode(SC_OK).extract().path("accessToken");
-        int spaceIndex = accessToken.indexOf(" ");
-        userToken = accessToken.substring(spaceIndex + 1);
+    public void createOrderWithInvalidIngredientAuthorizedFailed500() {
+        userToken = getUserToken();
 
         ArrayList<String> ingredients = new ArrayList<>();
         ingredients.add("aaaa");
         ingredients.add("bbb");
-        orderSteps.createOrdersRequest(ingredients,userToken).log().all().statusCode(SC_INTERNAL_SERVER_ERROR);
+        orderSteps.createOrdersRequest(ingredients, userToken).log().all().statusCode(SC_INTERNAL_SERVER_ERROR);
     }
+
+    @Test
+    @DisplayName("Получение заказов (1 заказ) конкретного пользователя, c авторизацией")
+    @Description("Данный тест покрывает следующие кейсы: 1) можно получить список заказов конкретного пользователя (если он сделал только один заказ), предварительно авторизовавшись")
+    public void getOneOrdersAuthorizedSucessfully() {
+        createOrderWithIngedientsAuthorizedSucessfully();
+        userToken = getUserToken();
+        orderSteps.getOrdersRequest(userToken).statusCode(SC_OK).body("success", is(true)).and().body("orders[0].status", is("done"));
+    }
+
+    @Test
+    @DisplayName("Получение заказов (несколько заказов) конкретного пользователя, c авторизацией")
+    @Description("Данный тест покрывает следующий кейс: 1) можно получить список заказов конкретного пользователя (если он сделал несколько заказов), предварительно авторизовавшись")
+    public void getManyOrdersAuthorizedSucessfully() {
+        createOrderWithIngedientsAuthorizedSucessfully();
+        createOrderWithIngedientsAuthorizedSucessfully();
+        userToken = getUserToken();
+        orderSteps.getOrdersRequest(userToken).statusCode(SC_OK).body("success", is(true)).and().body("orders[0].status", is("done")).and().body("orders[1].status", is("done"));
+    }
+
+    @Test
+    @DisplayName("Получение заказов (ни одного заказа) конкретного пользователя, c авторизацией")
+    @Description("Данный тест покрывает следующие кейсы: 1) можно получить список заказов конкретного пользователя (если он сделал не сделал ни одного заказа), предварительно авторизовавшись")
+    public void getNullOrdersAuthorizedSucessfully() {
+        userToken = getUserToken();
+        orderSteps.getOrdersRequest(userToken).statusCode(SC_OK).body("success", is(true)).and().body("orders", empty());
+    }
+
+    @Test
+    @DisplayName("Ошибка при получении заказов (1 заказ) конкретного пользователя, без авторизацией")
+    @Description("Данный тест покрывает следующие кейсы: 1) нельзя получить список заказов конкретного пользователя (если он сделал только один заказ), не авторизовавшись")
+    public void getOneOrdersNotAuthorizedFailed401() {
+        createOrderWithIngedientsAuthorizedSucessfully();
+        userToken = getUserToken();
+        orderSteps.getOrdersRequest().statusCode(SC_UNAUTHORIZED).body("success", is(false)).and().body("message", is("You should be authorised"));
+    }
+
 
 }
