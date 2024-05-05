@@ -35,6 +35,7 @@ public class OrderGetInfoTests {
                 userSteps.deleteUserRequest(userTokens.get(i)).statusCode(SC_ACCEPTED).body("message", is("User successfully removed"));
             }
         }
+        //TODO delete the orders too, no call is seen for this
     }
 
     @Before
