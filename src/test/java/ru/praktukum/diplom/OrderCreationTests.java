@@ -64,7 +64,7 @@ public class OrderCreationTests {
     }
 
     @Test
-    @DisplayName("Успешное создание заказа с авторизацией и c игридиентами")
+    @DisplayName("Успешное создание заказа с авторизацией и c ингридиентами")
     @Description("Данный тест покрывает следующие кейсы: 1) можно создать заказ с валидными ингридиентами и без авторизации")
     public void createOrderWithIngedientsAuthorizedSucessfully() {
         userToken = getUserToken();
@@ -74,7 +74,7 @@ public class OrderCreationTests {
     }
 
     @Test
-    @DisplayName("Ошибка при создание заказа без авторизации c игридиентами")
+    @DisplayName("Ошибка при создание заказа без авторизации c ингредиентами")
     @Description("Данный тест покрывает следующие кейсы: 1) можно создать заказ с валидными ингридиентами и без авторизации")
     public void createOrderWithIngedientsNotAuthorizedFailed() {
         ArrayList<String> ingredients = orderSteps.getIngredientsRequest().extract().path("data[0,1]._id");
@@ -82,15 +82,15 @@ public class OrderCreationTests {
     }
 
     @Test
-    @DisplayName("Ошибка при создание заказа без авторизации и без ингридиентов")
-    @Description("Данный тест покрывает следующие кейсы: 1) можно создать заказ с ингридиентами и без авторизации")
+    @DisplayName("Ошибка при создание заказа без авторизации и без ингредиентов")
+    @Description("Данный тест покрывает следующие кейсы: 1) можно создать заказ с ингредиентами и без авторизации")
     public void createOrderWithoutIngedientsNotAuthorizedFailed400() {
         ArrayList<String> ingredients = new ArrayList<>();
         orderSteps.createOrdersRequest(ingredients).statusCode(SC_BAD_REQUEST).body("success", is(false)).and().body("message", is("Ingredient ids must be provided"));
     }
 
     @Test
-    @DisplayName("Ошибка при создание заказа c авторизацией, но без ингридиентов")
+    @DisplayName("Ошибка при создание заказа c авторизацией, но без ингредиентов")
     @Description("Данный тест покрывает следующие кейсы: 1) можно создать заказ с ингридиентами и без авторизации")
     public void createOrderWithoutIngedientsAuthorizedFailed400() {
         userToken = getUserToken();
