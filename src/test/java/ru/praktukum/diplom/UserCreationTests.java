@@ -7,8 +7,6 @@ import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
 import ru.praktikum.diplom.client.UserClient;
 import ru.praktikum.diplom.step.UserSteps;
 
@@ -20,8 +18,8 @@ import static org.hamcrest.Matchers.is;
 
 public class UserCreationTests {
     protected static List<String> userTokens = new ArrayList();
-    protected String userToken;
     protected static UserSteps userSteps;
+    protected String userToken;
     String email = "test-data@yandex" + RandomStringUtils.randomAlphabetic(5) + ".ru";
     String password = RandomStringUtils.randomAlphabetic(10);
     String name = RandomStringUtils.randomAlphabetic(10);
@@ -55,7 +53,7 @@ public class UserCreationTests {
     @Test
     @DisplayName("Успешное создание уникального пользователя с корректными данными")
     @Description("Данный тест покрывает следующие кейсы: 1) пользователя можно создать; 2) чтобы создать пользователя, нужно передать в ручку все обязательные поля; 3) запрос возвращает правильный код ответа (201 Created); 4) успешный запрос возвращает success: true")
-    public void createUserSucessfully() {
+    public void createUserSuccessfully() {
         userSteps
                 .createUserRequest(email, password, name)
                 .statusCode(SC_OK) //BUG: STEBURG-1: actually is a bug in RQ: creation should be not 200, but "201 created"

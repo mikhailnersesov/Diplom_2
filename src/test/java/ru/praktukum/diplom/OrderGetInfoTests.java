@@ -21,21 +21,20 @@ import static org.hamcrest.Matchers.is;
 
 public class OrderGetInfoTests {
     protected static List<String> userTokens = new ArrayList();
-    protected String userToken;
     protected static UserSteps userSteps;
     protected static OrderSteps orderSteps;
     private final String email = "test-data@yandex" + RandomStringUtils.randomAlphabetic(5) + ".ru";
     private final String password = RandomStringUtils.randomAlphabetic(10);
     private final String name = RandomStringUtils.randomAlphabetic(10);
+    protected String userToken;
 
     @AfterClass
     public static void tearDown() {
-        for (int i = 0; i < userTokens.size(); i++) {
-            if (userTokens.get(i) != null) {
-                userSteps.deleteUserRequest(userTokens.get(i)).statusCode(SC_ACCEPTED).body("message", is("User successfully removed"));
+        for (String token : userTokens) {
+            if (token != null) {
+                userSteps.deleteUserRequest(token).statusCode(SC_ACCEPTED).body("message", is("User successfully removed"));
             }
         }
-        //TODO delete the orders too, no call is seen for this
     }
 
     @Before
@@ -63,7 +62,8 @@ public class OrderGetInfoTests {
         int spaceIndex = accessToken.indexOf(" ");
         return userToken = accessToken.substring(spaceIndex + 1);
     }
-    public void createOrderWithIngedientsAuthorizedSucessfully(){
+
+    public void createOrderWithIngedientsAuthorizedSucessfully() {
         userToken = getUserToken();
 
         ArrayList<String> ingredients = orderSteps.getIngredientsRequest().extract().path("data[0,1]._id");

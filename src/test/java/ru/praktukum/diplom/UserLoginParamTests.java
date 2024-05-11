@@ -4,7 +4,6 @@ import io.qameta.allure.Description;
 import io.qameta.allure.junit4.DisplayName;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.AfterClass;
-import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -20,6 +19,10 @@ import static org.hamcrest.Matchers.is;
 
 @RunWith(Parameterized.class)
 public class UserLoginParamTests {
+    @Parameterized.Parameter(0)
+    static public String emailParam = "test-data@yandex" + RandomStringUtils.randomAlphabetic(5) + ".ru";
+    @Parameterized.Parameter(1)
+    static public String passwordParam = RandomStringUtils.randomAlphabetic(10);
     protected static List<String> userTokens = new ArrayList();
     protected static UserSteps userSteps;
     static String email = "test-data@yandex" + RandomStringUtils.randomAlphabetic(5) + ".ru";
@@ -44,11 +47,6 @@ public class UserLoginParamTests {
                 .body("success", is(true));
 
     }
-
-    @Parameterized.Parameter(0)
-    static public String emailParam = "test-data@yandex" + RandomStringUtils.randomAlphabetic(5) + ".ru";
-    @Parameterized.Parameter(1)
-    static public String passwordParam = RandomStringUtils.randomAlphabetic(10);
 
     @Parameterized.Parameters(name = "{index} - email {0}, password {1}")
     public static Object[][] data() {

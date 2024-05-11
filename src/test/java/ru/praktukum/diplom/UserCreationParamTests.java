@@ -20,9 +20,15 @@ import static org.hamcrest.Matchers.is;
 
 @RunWith(Parameterized.class)
 public class UserCreationParamTests {
+    @Parameterized.Parameter(0)
+    static public String emailParam = "test-data@yandex" + RandomStringUtils.randomAlphabetic(5) + ".ru";
+    @Parameterized.Parameter(1)
+    static public String passwordParam = RandomStringUtils.randomAlphabetic(10);
+    @Parameterized.Parameter(2)
+    static public String nameParam = RandomStringUtils.randomAlphabetic(10);
     protected static List<String> userTokens = new ArrayList();
-    protected String userToken;
     protected static UserSteps userSteps;
+    protected String userToken;
 
     @AfterClass
     public static void tearDown() {
@@ -31,6 +37,18 @@ public class UserCreationParamTests {
                 userSteps.deleteUserRequest(token).statusCode(SC_ACCEPTED).body("message", is("User successfully removed"));
             }
         }
+    }
+
+    @Parameterized.Parameters(name = "{index} - email {0}, password {1}, name {2}")
+    public static Object[][] data() {
+        return new Object[][]{
+                {"", passwordParam, nameParam},
+                {null, passwordParam, nameParam},
+                {emailParam, "", nameParam},
+                {emailParam, null, nameParam},
+                {emailParam, passwordParam, ""},
+                {emailParam, passwordParam, null}
+        };
     }
 
     @Before
@@ -48,25 +66,6 @@ public class UserCreationParamTests {
             System.out.println("no users was created - nothing to save");
         }
         userTokens.add(userToken);
-    }
-
-    @Parameterized.Parameter(0)
-    static public String emailParam = "test-data@yandex" + RandomStringUtils.randomAlphabetic(5) + ".ru";
-    @Parameterized.Parameter(1)
-    static public String passwordParam = RandomStringUtils.randomAlphabetic(10);
-    @Parameterized.Parameter(2)
-    static public String nameParam = RandomStringUtils.randomAlphabetic(10);
-
-    @Parameterized.Parameters(name = "{index} - email {0}, password {1}, name {2}")
-    public static Object[][] data() {
-        return new Object[][]{
-                {"", passwordParam, nameParam},
-                {null, passwordParam, nameParam},
-                {emailParam, "", nameParam},
-                {emailParam, null, nameParam},
-                {emailParam, passwordParam, ""},
-                {emailParam, passwordParam, null}
-        };
     }
 
     @Test

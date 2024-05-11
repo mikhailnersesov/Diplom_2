@@ -16,23 +16,22 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.apache.http.HttpStatus.*;
-import static org.hamcrest.Matchers.empty;
 import static org.hamcrest.Matchers.is;
 
 public class OrderCreationTests {
     protected static List<String> userTokens = new ArrayList();
-    protected String userToken;
     protected static UserSteps userSteps;
     protected static OrderSteps orderSteps;
     private final String email = "test-data@yandex" + RandomStringUtils.randomAlphabetic(5) + ".ru";
     private final String password = RandomStringUtils.randomAlphabetic(10);
     private final String name = RandomStringUtils.randomAlphabetic(10);
+    protected String userToken;
 
     @AfterClass
     public static void tearDown() {
-        for (int i = 0; i < userTokens.size(); i++) {
-            if (userTokens.get(i) != null) {
-                userSteps.deleteUserRequest(userTokens.get(i)).statusCode(SC_ACCEPTED).body("message", is("User successfully removed"));
+        for (String token : userTokens) {
+            if (token != null) {
+                userSteps.deleteUserRequest(token).statusCode(SC_ACCEPTED).body("message", is("User successfully removed"));
             }
         }
     }
@@ -120,7 +119,6 @@ public class OrderCreationTests {
         ingredients.add("bbb");
         orderSteps.createOrdersRequest(ingredients, userToken).statusCode(SC_INTERNAL_SERVER_ERROR);
     }
-
 
 
 }

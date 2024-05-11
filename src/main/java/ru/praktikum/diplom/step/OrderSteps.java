@@ -25,10 +25,10 @@ public class OrderSteps {
     }
 
     @Step("Создание заказа")
-    public ValidatableResponse createOrdersRequest(ArrayList<String> ingredients,String userToken) {
+    public ValidatableResponse createOrdersRequest(ArrayList<String> ingredients, String userToken) {
         OrdersIngredientsRequest ordersIngredientsRequest = new OrdersIngredientsRequest();
         ordersIngredientsRequest.setIngredients(ingredients);
-        return ordersClient.sendPostRequestOrdersCreate(ordersIngredientsRequest,userToken).then();
+        return ordersClient.sendPostRequestOrdersCreate(ordersIngredientsRequest, userToken).then();
     }
 
     @Step("Получить заказы конкретного пользователя")

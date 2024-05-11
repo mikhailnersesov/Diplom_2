@@ -18,8 +18,8 @@ import static org.hamcrest.text.IsEqualIgnoringCase.equalToIgnoringCase;
 
 public class UserChangeDataTests {
     protected static List<String> userTokens = new ArrayList();
-    protected String userToken;
     protected static UserSteps userSteps;
+    protected String userToken;
     String email = "test-data@yandex" + RandomStringUtils.randomAlphabetic(5) + ".ru";
     String password = RandomStringUtils.randomAlphabetic(10);
     String name = RandomStringUtils.randomAlphabetic(10);
@@ -49,24 +49,26 @@ public class UserChangeDataTests {
     @Test
     @DisplayName("Успешный изменение почты пользователя с авторизацией")
     @Description("Данный тест покрывает следующие кейсы: 1) пройдя авторизацию - можно успешно изменить почту для пользователя")
-    public void test_2_changeUserDataEmailWithAuthorizationSucessfully() {
+    public void test_2_changeUserDataEmailWithAuthorizationSuccessfully() {
         String newEmail = "test-data@yandex" + RandomStringUtils.randomAlphabetic(5) + ".ru";
-        userSteps.getUserDataRequest(newEmail, name, userTokens.get(0)).statusCode(SC_OK).body("success", is(true)).and().body("user.email",equalToIgnoringCase(newEmail)).and().body("user.name",equalToIgnoringCase(name));
+        userSteps.getUserDataRequest(newEmail, name, userTokens.get(0)).statusCode(SC_OK).body("success", is(true)).and().body("user.email", equalToIgnoringCase(newEmail)).and().body("user.name", equalToIgnoringCase(name));
     }
+
     @Test
     @DisplayName("Успешный изменение имени пользователя с авторизацией")
     @Description("Данный тест покрывает следующие кейсы: 1) пройдя авторизацию - можно успешно изменить пароль для пользователя")
-    public void test_1_changeUserDataNameWithAuthorizationSucessfully() {
+    public void test_1_changeUserDataNameWithAuthorizationSuccessfully() {
         String newName = RandomStringUtils.randomAlphabetic(10);
-        userSteps.getUserDataRequest(email, newName, userTokens.get(0)).statusCode(SC_OK).body("success", is(true)).and().body("user.email",equalToIgnoringCase(email)).and().body("user.name",equalToIgnoringCase(newName));
+        userSteps.getUserDataRequest(email, newName, userTokens.get(0)).statusCode(SC_OK).body("success", is(true)).and().body("user.email", equalToIgnoringCase(email)).and().body("user.name", equalToIgnoringCase(newName));
     }
+
     @Test
     @DisplayName("Успешный изменение всех данных пользователя (почта и имя) с авторизацией")
     @Description("Данный тест покрывает следующие кейсы: 1) пройдя авторизацию - можно успешно изменить сразу и почту и пароль для пользователя")
-    public void test_3_changeUserDataBothWithAuthorizationSucessfully() {
+    public void test_3_changeUserDataBothWithAuthorizationSuccessfully() {
         String newEmail = "test-data@yandex" + RandomStringUtils.randomAlphabetic(5) + ".ru";
         String newName = RandomStringUtils.randomAlphabetic(10);
-        userSteps.getUserDataRequest(newEmail, newName, userTokens.get(0)).statusCode(SC_OK).body("success", is(true)).and().body("user.email",equalToIgnoringCase(newEmail)).and().body("user.name",equalToIgnoringCase(newName));
+        userSteps.getUserDataRequest(newEmail, newName, userTokens.get(0)).statusCode(SC_OK).body("success", is(true)).and().body("user.email", equalToIgnoringCase(newEmail)).and().body("user.name", equalToIgnoringCase(newName));
     }
 
     @Test
@@ -75,6 +77,6 @@ public class UserChangeDataTests {
     public void test_4_changeUserDataWithoutAuthorizationFailed() {
         String newEmail = "test-data@yandex" + RandomStringUtils.randomAlphabetic(5) + ".ru";
         String newPassword = RandomStringUtils.randomAlphabetic(10);
-        userSteps.getUserDataRequest(newEmail, newPassword, "").statusCode(SC_UNAUTHORIZED).body("success", is(false)).and().body("message",is("You should be authorised"));
+        userSteps.getUserDataRequest(newEmail, newPassword, "").statusCode(SC_UNAUTHORIZED).body("success", is(false)).and().body("message", is("You should be authorised"));
     }
 }
