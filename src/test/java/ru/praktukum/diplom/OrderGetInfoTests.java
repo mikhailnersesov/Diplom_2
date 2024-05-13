@@ -102,8 +102,8 @@ public class OrderGetInfoTests {
     @Description("Данный тест покрывает следующие кейсы: 1) нельзя получить список заказов конкретного пользователя (если он сделал только один заказ), не авторизовавшись")
     public void getOneOrdersNotAuthorizedFailed401() {
         createOrderWithIngedientsAuthorizedSucessfully();
-        userToken = getUserToken();
-        orderSteps.getOrdersRequest().statusCode(SC_UNAUTHORIZED).body("success", is(false)).and().body("message", is("You should be authorised"));
+        userToken = "";
+        orderSteps.getOrdersRequest(userToken).statusCode(SC_UNAUTHORIZED).body("success", is(false)).and().body("message", is("You should be authorised"));
     }
 
 

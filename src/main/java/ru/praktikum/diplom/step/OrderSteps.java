@@ -32,11 +32,6 @@ public class OrderSteps {
     }
 
     @Step("Получить заказы конкретного пользователя")
-    public ValidatableResponse getOrdersRequest() {
-        return getOrdersRequest("");
-    }
-
-    @Step("Получить заказы конкретного пользователя")
     public ValidatableResponse getOrdersRequest(String userToken) {
         return ordersClient.sendGetRequestOrders(userToken).then();
     }
