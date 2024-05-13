@@ -7,7 +7,7 @@ import static io.restassured.RestAssured.given;
 import static ru.praktikum.diplom.config.RestConfig.BASE_URI;
 
 public abstract class RestClient {
-    protected RequestSpecification getdefaultRequestSpecification() {
+    protected RequestSpecification getDefaultRequestSpecification() {
         return given()
                 .baseUri(BASE_URI)
                 .contentType(ContentType.JSON);

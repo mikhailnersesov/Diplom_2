@@ -4,27 +4,30 @@ import io.qameta.allure.Step;
 import io.restassured.response.Response;
 import ru.praktikum.diplom.dto.OrdersIngredientsRequest;
 
+import static ru.praktikum.diplom.config.OrdersConfig.INGREDIENTS_ENDPOINT;
+import static ru.praktikum.diplom.config.OrdersConfig.ORDERS_ENDPOINT;
+
 public class OrdersClient extends RestClient {
 
     @Step("Send POST request to /orders")
     public Response sendPostRequestOrdersCreate(OrdersIngredientsRequest ordersIngredientsRequest, String accessToken) {
-        return getdefaultRequestSpecification().auth().oauth2(accessToken)
+        return getDefaultRequestSpecification().auth().oauth2(accessToken)
                 .body(ordersIngredientsRequest)
                 .when()
-                .post("/orders");
+                .post(ORDERS_ENDPOINT);
     }
 
     @Step("Send GET request to /orders")
     public Response sendGetRequestOrders(String accessToken) {
-        return getdefaultRequestSpecification().auth().oauth2(accessToken)
+        return getDefaultRequestSpecification().auth().oauth2(accessToken)
                 .when()
-                .get("/orders");
+                .get(ORDERS_ENDPOINT);
     }
 
     @Step("Send GET request to /ingredients")
     public Response sendGetRequestIngredients() {
-        return getdefaultRequestSpecification()
+        return getDefaultRequestSpecification()
                 .when()
-                .get("/ingredients");
+                .get(INGREDIENTS_ENDPOINT);
     }
 }
