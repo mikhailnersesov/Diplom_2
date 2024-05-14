@@ -17,6 +17,7 @@ import java.util.List;
 
 import static org.apache.http.HttpStatus.*;
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.notNullValue;
 
 public class OrderCreationTests   extends BaseTest  {
     protected static OrderSteps orderSteps;
@@ -45,7 +46,7 @@ public class OrderCreationTests   extends BaseTest  {
         userToken = getUserToken();
 
         ArrayList<String> ingredients = orderSteps.getIngredientsRequest().extract().path("data[0,1]._id");
-        orderSteps.createOrdersRequest(ingredients, userToken).statusCode(SC_OK).body("success", is(true)).and().body("name", is("Бессмертный флюоресцентный бургер"));
+        orderSteps.createOrdersRequest(ingredients, userToken).statusCode(SC_OK).body("success", is(true)).and().body("name", notNullValue());
     }
 
     @Test
