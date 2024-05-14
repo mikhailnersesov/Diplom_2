@@ -16,35 +16,8 @@ import static org.apache.http.HttpStatus.*;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.text.IsEqualIgnoringCase.equalToIgnoringCase;
 
-public class UserChangeDataTests {
-    protected static List<String> userTokens = new ArrayList();
-    protected static UserSteps userSteps;
-    protected String userToken;
-    String email = "test-data@yandex" + RandomStringUtils.randomAlphabetic(5) + ".ru";
-    String password = RandomStringUtils.randomAlphabetic(10);
-    String name = RandomStringUtils.randomAlphabetic(10);
+public class UserChangeDataTests   extends BaseTest {
 
-    @AfterClass
-    public static void tearDown() {
-        for (String token : userTokens) {
-            if (token != null) {
-                userSteps.deleteUserRequest(token).statusCode(SC_ACCEPTED).body("message", is("User successfully removed"));
-            }
-        }
-    }
-
-    @Before
-    public void setUp() {
-        userSteps = new UserSteps(new UserClient());
-        userSteps
-                .createUserRequest(email, password, name)
-                .statusCode(SC_OK)
-                .body("success", is(true));
-        String accessToken = userSteps.loginUserRequest(email, password).statusCode(SC_OK).extract().path("accessToken");
-        int spaceIndex = accessToken.indexOf(" "); // Find the index of the space character
-        userToken = accessToken.substring(spaceIndex + 1);  // Extract the second part of the string using substring
-        userTokens.add(userToken);
-    }
 
     @Test
     @DisplayName("Успешный изменение почты пользователя с авторизацией")
