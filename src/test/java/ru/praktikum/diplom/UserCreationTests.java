@@ -1,4 +1,4 @@
-package ru.praktukum.diplom;
+package ru.praktikum.diplom;
 
 import io.qameta.allure.Description;
 import io.qameta.allure.junit4.DisplayName;
@@ -16,40 +16,19 @@ import java.util.List;
 import static org.apache.http.HttpStatus.*;
 import static org.hamcrest.Matchers.is;
 
-public class UserCreationTests {
-    protected static List<String> userTokens = new ArrayList();
-    protected static UserSteps userSteps;
-    protected String userToken;
-    String email = "test-data@yandex" + RandomStringUtils.randomAlphabetic(5) + ".ru";
-    String password = RandomStringUtils.randomAlphabetic(10);
-    String name = RandomStringUtils.randomAlphabetic(10);
-
-    @AfterClass
-    public static void tearDown() {
-        for (String token : userTokens) {
-            if (token != null) {
-                userSteps.deleteUserRequest(token).statusCode(SC_ACCEPTED).body("message", is("User successfully removed"));
-            }
-        }
-    }
-
+public class UserCreationTests extends BaseTest  {
+    @Override
     @Before
     public void setUp() {
         userSteps = new UserSteps(new UserClient());
     }
-
     @After
-    public void getUserIdIfWasSuccessfullyCreated() {
-        try {
-            String accessToken = userSteps.loginUserRequest(email, password).statusCode(SC_OK).extract().path("accessToken");
-            int spaceIndex = accessToken.indexOf(" "); // Find the index of the space character
-            userToken = accessToken.substring(spaceIndex + 1);  // Extract the second part of the string using substring
-        } catch (AssertionError assertionError) {
-            System.out.println("no users was created - nothing to save");
-        }
+    public void tearDownTest(){
+        String accessToken = userSteps.loginUserRequest(email, password).statusCode(SC_OK).extract().path("accessToken");
+        int spaceIndex = accessToken.indexOf(" "); // Find the index of the space character
+        userToken = accessToken.substring(spaceIndex + 1);  // Extract the second part of the string using substring
         userTokens.add(userToken);
     }
-
     @Test
     @DisplayName("Успешное создание уникального пользователя с корректными данными")
     @Description("Данный тест покрывает следующие кейсы: 1) пользователя можно создать; 2) чтобы создать пользователя, нужно передать в ручку все обязательные поля; 3) запрос возвращает правильный код ответа (201 Created); 4) успешный запрос возвращает success: true")
