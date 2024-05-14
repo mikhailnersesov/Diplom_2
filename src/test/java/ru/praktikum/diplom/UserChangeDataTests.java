@@ -3,21 +3,20 @@ package ru.praktikum.diplom;
 import io.qameta.allure.Description;
 import io.qameta.allure.junit4.DisplayName;
 import org.apache.commons.lang3.RandomStringUtils;
-import org.junit.AfterClass;
-import org.junit.Before;
+import org.junit.After;
 import org.junit.Test;
-import ru.praktikum.diplom.client.UserClient;
-import ru.praktikum.diplom.step.UserSteps;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import static org.apache.http.HttpStatus.*;
+import static org.apache.http.HttpStatus.SC_OK;
+import static org.apache.http.HttpStatus.SC_UNAUTHORIZED;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.text.IsEqualIgnoringCase.equalToIgnoringCase;
 
-public class UserChangeDataTests   extends BaseTest {
+public class UserChangeDataTests extends BaseTest {
 
+    @Override
+    @After
+    public void tearDownMethod() {
+    }
 
     @Test
     @DisplayName("Успешный изменение почты пользователя с авторизацией")
