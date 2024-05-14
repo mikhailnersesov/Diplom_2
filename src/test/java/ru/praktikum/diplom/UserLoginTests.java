@@ -16,23 +16,9 @@ import static org.apache.http.HttpStatus.SC_ACCEPTED;
 import static org.apache.http.HttpStatus.SC_OK;
 import static org.hamcrest.Matchers.is;
 
-public class UserLoginTests {
-    protected static List<String> userTokens = new ArrayList();
-    protected static UserSteps userSteps;
-    protected String userToken;
-    String email = "test-data@yandex" + RandomStringUtils.randomAlphabetic(5) + ".ru";
-    String password = RandomStringUtils.randomAlphabetic(10);
-    String name = RandomStringUtils.randomAlphabetic(10);
+public class UserLoginTests  extends BaseTest  {
 
-    @AfterClass
-    public static void tearDown() {
-        for (String token : userTokens) {
-            if (token != null) {
-                userSteps.deleteUserRequest(token).statusCode(SC_ACCEPTED).body("message", is("User successfully removed"));
-            }
-        }
-    }
-
+    @Override
     @Before
     public void setUp() {
         userSteps = new UserSteps(new UserClient());
