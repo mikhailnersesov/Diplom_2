@@ -18,43 +18,19 @@ import java.util.List;
 import static org.apache.http.HttpStatus.*;
 import static org.hamcrest.Matchers.is;
 
-public class OrderCreationTests {
-    protected static List<String> userTokens = new ArrayList();
-    protected static UserSteps userSteps;
+public class OrderCreationTests   extends BaseTest  {
     protected static OrderSteps orderSteps;
-    private final String email = "test-data@yandex" + RandomStringUtils.randomAlphabetic(5) + ".ru";
-    private final String password = RandomStringUtils.randomAlphabetic(10);
-    private final String name = RandomStringUtils.randomAlphabetic(10);
-    protected String userToken;
 
-    @AfterClass
-    public static void tearDown() {
-        for (String token : userTokens) {
-            if (token != null) {
-                userSteps.deleteUserRequest(token).statusCode(SC_ACCEPTED).body("message", is("User successfully removed"));
-            }
-        }
-    }
-
+    @Override
     @Before
-    public void setUp() {
+    public void setUpMethod() {
         userSteps = new UserSteps(new UserClient());
         orderSteps = new OrderSteps(new OrdersClient());
         userSteps
                 .createUserRequest(email, password, name);
     }
 
-    @After
-    public void getUserIdIfWasSuccessfullyCreated() {
-        try {
-            String accessToken = userSteps.loginUserRequest(email, password).statusCode(SC_OK).extract().path("accessToken");
-            int spaceIndex = accessToken.indexOf(" "); // Find the index of the space character
-            userToken = accessToken.substring(spaceIndex + 1);  // Extract the second part of the string using substring
-        } catch (AssertionError assertionError) {
-            System.out.println("no users was created - nothing to save");
-        }
-        userTokens.add(userToken);
-    }
+
 
     public String getUserToken() {
         String accessToken = userSteps.loginUserRequest(email, password).statusCode(SC_OK).extract().path("accessToken");

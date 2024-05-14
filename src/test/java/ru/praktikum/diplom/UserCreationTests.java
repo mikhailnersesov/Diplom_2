@@ -19,16 +19,10 @@ import static org.hamcrest.Matchers.is;
 public class UserCreationTests extends BaseTest  {
     @Override
     @Before
-    public void setUp() {
+    public void setUpMethod() {
         userSteps = new UserSteps(new UserClient());
     }
-    @After
-    public void tearDownTest(){
-        String accessToken = userSteps.loginUserRequest(email, password).statusCode(SC_OK).extract().path("accessToken");
-        int spaceIndex = accessToken.indexOf(" "); // Find the index of the space character
-        userToken = accessToken.substring(spaceIndex + 1);  // Extract the second part of the string using substring
-        userTokens.add(userToken);
-    }
+
     @Test
     @DisplayName("Успешное создание уникального пользователя с корректными данными")
     @Description("Данный тест покрывает следующие кейсы: 1) пользователя можно создать; 2) чтобы создать пользователя, нужно передать в ручку все обязательные поля; 3) запрос возвращает правильный код ответа (201 Created); 4) успешный запрос возвращает success: true")
